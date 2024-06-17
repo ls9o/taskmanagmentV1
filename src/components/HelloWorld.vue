@@ -1,5 +1,9 @@
 <template>
-  <h1 class="flex-grow-1 p-3">Hi</h1>
+<div class="card">
+    <div class="card-body">Basic card</div>
+    <div class="card-body">Basic card</div>
+    <button type="button" class="btn btn-info">Info</button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -17,5 +21,14 @@ export default class HelloWorld extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-
+.card {
+  margin: 5%;
+  position: relative;
+   button {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    border:none;
+   }
+}
 </style>
