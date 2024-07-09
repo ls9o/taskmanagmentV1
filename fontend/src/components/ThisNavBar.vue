@@ -42,6 +42,6 @@
   </script>
   
   <style>
-  
+  @import './Sass/Narbar.scss';
   </style>
   
