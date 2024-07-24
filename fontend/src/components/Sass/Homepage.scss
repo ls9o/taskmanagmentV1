@@ -1,3 +1,4 @@
+
 .card {
     background-color: antiquewhite;
     margin: auto;
@@ -10,3 +11,16 @@
     margin-right: 30px;
     margin-bottom: 20px;
 }
+
+.section-half {
+    height: 50vh; /* ครึ่งหนึ่งของความสูงของ viewport */
+    overflow-y: auto; /* เพิ่ม scroll bar หากมีข้อมูลมากเกินไป */
+  }
+  
+  .border {
+    padding: 10px;
+  }
+  
+  .card {
+    margin-bottom: 10px;
+  }

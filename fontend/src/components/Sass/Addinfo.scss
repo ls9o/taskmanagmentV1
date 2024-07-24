@@ -31,9 +31,14 @@
   }
   
   .full-width-input {
-    flex: 1;
+    flex: 0;
   }
   
   .button-right {
     float: right;
+  }
+
+  .bg-secondary-custom {
+    background-color: var(--bs-tertiary-bg);
+    color: #000000; /* เพิ่มสีตัวอักษรเป็นสีขาว */
   }
