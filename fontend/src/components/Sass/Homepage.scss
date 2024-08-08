@@ -1,6 +1,6 @@
 
 .card {
-    background-color: antiquewhite;
+    background-color: rgb(232, 228, 222);
     margin: auto;
     margin-bottom: 20px;
 }
@@ -13,8 +13,7 @@
 }
 
 .section-half {
-    height: 50vh; /* ครึ่งหนึ่งของความสูงของ viewport */
-    overflow-y: auto; /* เพิ่ม scroll bar หากมีข้อมูลมากเกินไป */
+    height:38vh; /* ครึ่งหนึ่งของความสูงของ viewport */
   }
   
   .border {
@@ -24,3 +23,29 @@
   .card {
     margin-bottom: 10px;
   }
+
+
+.btn-icon i {
+    font-size: 2rem; /* ปรับขนาดไอคอน */
+}
+
+.text-Result {
+    text-align: center;
+}
+
+.icon-pad{
+  padding: 5px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  button {
+    margin: 0 10px;
+    border-radius: 5px ;
+    border: none;
+    background-color: rgb(186, 186, 186);
+  }
+}

@@ -1,15 +1,15 @@
 <template>
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <ProCureMent msg="Welcome to Your Vue.js + TypeScript App"/>
 
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import HelloWorld from '../components/HelloWorld.vue'; // @ is an alias to /src
+import ProCureMent from '../components/ProCureMent.vue'; // @ is an alias to /src
 
 @Options({
   components: {
-    HelloWorld,
+    ProCureMent,
   },
 })
 export default class HomeView extends Vue {}

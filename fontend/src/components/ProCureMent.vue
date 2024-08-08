@@ -91,7 +91,7 @@ export default {
       return Math.ceil(this.filteredDatainteam.length / this.itemsPerPage);
     },
     filteredDatainfo() {
-      return this.datainfo.filter(item => item.infotype === 'ภายใน' && item.infoname);
+      return this.datainfo.filter(item => item.infotype === 'จัดซื้อจัดจ้าง' && item.infoname);
     },
     filteredDatainteam() {
       return this.datainteam.filter(item => item.infotype === 'ทีมงาน' && item.infoname);
