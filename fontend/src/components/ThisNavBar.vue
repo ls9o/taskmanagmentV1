@@ -23,7 +23,7 @@
         </li>
         <li>
           <router-link to="/Addinfo" custom v-slot="{ href, navigate, isActive }">
-            <a :href="href" @click="navigate" :class="['nav-link', 'px-2', { 'active': isActive }]">Create info</a>
+            <a :href="href" @click="navigate" :class="['nav-link', 'px-2', { 'active': isActive }]">Create Task</a>
           </router-link>
         </li>
       </ul>

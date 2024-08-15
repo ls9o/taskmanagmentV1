@@ -14,6 +14,6 @@ import ThisNavBar from './components/ThisNavBar.vue';
 })
 export default class HomeView extends Vue {}
 </script>
-<style lang="scss">
-
+<style>
+@import './components/Sass/Assets.scss';
 </style>

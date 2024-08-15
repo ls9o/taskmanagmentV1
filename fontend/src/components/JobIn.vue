@@ -17,7 +17,7 @@
                 <span class="col">/End: {{ item.infoend ? item.infoend : 'No End Date' }}</span>
               </div>
               <button @click="moreinfo(item)" type="button" class="btn btn-outline-primary">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> ดูรายละเอียด
+                <i class="fa-solid fa-magnifying-glass"></i>
               </button>
             </div>
           </div>
@@ -43,7 +43,7 @@
               <span class="col">DayStart: {{ item.infostart ? item.infostart : 'No Start Date' }}</span>
               <span class="col">DayEnd: {{ item.infoend ? item.infoend : 'No End Date' }}</span>
               <button @click="moreinfo(item)" type="button" class="btn btn-outline-primary">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> ดูรายละเอียด
+                <i class="fa-solid fa-magnifying-glass"></i>
               </button>
             </div>
           </div>

@@ -17,11 +17,11 @@
                 <span class="col">/End: {{ item.infoend ? item.infoend : 'No End Date' }}</span>
               </div>
               <button @click="moreinfo(item)" type="button" class="btn btn-outline-primary">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> ดูรายละเอียด
+                <i class="fa-solid fa-magnifying-glass"></i>
               </button>
             </div>
           </div>
-          <div class="pagination">
+          <div class="pagination ">
             <button @click="changePageDataInfo(currentPageDataInfo - 1)"
               :disabled="currentPageDataInfo === 1">Previous</button>
             <span>Page {{ currentPageDataInfo }} of {{ totalPagesDataInfo }}</span>
@@ -43,11 +43,11 @@
               <span class="col">DayStart: {{ item.infostart ? item.infostart : 'No Start Date' }}</span>
               <span class="col">DayEnd: {{ item.infoend ? item.infoend : 'No End Date' }}</span>
               <button @click="moreinfo(item)" type="button" class="btn btn-outline-primary">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> ดูรายละเอียด
+                <i class="fa-solid fa-magnifying-glass"></i>
               </button>
             </div>
           </div>
-          <div class="pagination">
+          <div class="pagination pagination-center">
             <button @click="changePageDataInTeam(currentPageDataInTeam - 1)"
               :disabled="currentPageDataInTeam === 1">Previous</button>
             <span>Page {{ currentPageDataInTeam }} of {{ totalPagesDataInTeam }}</span>

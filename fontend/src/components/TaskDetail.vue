@@ -14,7 +14,7 @@
 
                 <!-- แสดงปุ่ม addinfo -->
                 <div v-if="!hasAddInfoEntries && !isAddingInfo">
-                    <button @click="startAddingInfo" class="btn btn-success mb-3">addinfo</button>
+                    <button @click="startAddingInfo" class="btn btn-secondary mb-3">addinfo</button>
                 </div>
 
                 <!-- แสดงฟอร์ม subInputBoxinfo เมื่อกดปุ่ม addinfo และไม่มีข้อมูลใน subInputBoxesinfo -->
@@ -48,7 +48,7 @@
                         <p class="card-text">รายละเอียด: {{ info.infodetails }}</p>
                         <p class="card-text">วันที่เริ่ม: {{ info.infostart }}</p>
                         <p class="card-text">วันที่จบ: {{ info.infoend }}</p>
-                        <div><button @click="EditSub(taskDetail)" class="btn btn-danger">edit</button></div>
+                        <div><button @click="editSub(taskDetail, info)" class="btn btn-primary">edit Info</button></div>
                     </div>
                 </div>
 
@@ -57,14 +57,13 @@
                     <div class="card-body">
                         <h5 class="card-title">ชื่อ Process: {{ process.procesname }}</h5>
                         <p class="card-text">รายละเอียด: {{ process.procesdetails }}</p>
-                        <p class="card-text">วันที่เริ่ม: {{ process.processtart }}</p>
+                        <p class="card-text">จำนวนวันทำงาน: {{ process.processtart }} <label>วัน</label></p>
                         <p class="card-text">วันที่จบ: {{ process.procesend }}</p>
 
                         <!-- แสดงปุ่ม addprocess เฉพาะการ์ดนี้ -->
-                        <!-- แสดงปุ่ม addprocess เฉพาะการ์ดนี้ -->
                         <div v-if="!hasAddProcessEntries(processIndex) && !process.isAdding">
                             <button @click="startAddingProcess(processIndex)"
-                                class="btn btn-success mb-4 button-right">addprocess</button>
+                                class="btn btn-secondary mb-4 button-right">addprocess</button>
                         </div>
 
                         <!-- แสดงฟอร์ม subInputBoxprocess เมื่อกดปุ่ม addprocess -->
@@ -76,12 +75,12 @@
                                         v-model="process.newProcessDetails.procesdetails"></textarea>
                                 </div>
                                 <div class="card-body col-2 mb-3">
-                                    <label class="form-label">วันที่เริ่ม:</label>
-                                    <input class="form-control bg-secondary-custom" type="date"
+                                    <label class="form-label">จำนวนวันทำงาน:</label>
+                                    <input class="form-control bg-secondary-custom" type="text"
                                         v-model="process.newProcessDetails.processtart">
                                 </div>
                                 <div class="card-body col-2 mb-3">
-                                    <label class="form-label">วันที่จบ:</label>
+                                    <label class="form-label">กำหนดการส่ง:</label>
                                     <input class="form-control bg-secondary-custom" type="date"
                                         v-model="process.newProcessDetails.procesend">
                                 </div>
@@ -99,9 +98,10 @@
                             class="card mb-3">
                             <div class="card-body">
                                 <p class="card-text">รายละเอียดย่อย: {{ subprocess.procesdetails }}</p>
-                                <p class="card-text">วันที่เริ่ม: {{ subprocess.processtart }}</p>
-                                <p class="card-text">วันที่จบ: {{ subprocess.procesend }}</p>
-                                <div><button @click="EditSub(taskDetail)" class="btn btn-danger">edit</button></div>
+                                <p class="card-text">จำนวนวันทำงาน: {{ subprocess.processtart }} <label>วัน</label></p>
+                                <p class="card-text">กำหนดการส่ง: {{ subprocess.procesend }}</p>
+                                <div><button @click="editSub(taskDetail, subprocess)" class="btn btn-primary">edit
+                                        Process</button></div>
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
             <div class="row">
                 <div class="col-9"></div>
                 <div class="col-1">
-                    <button class="btn btn-danger button-right mb-3" @click="fixinfo(taskDetail)">แก้ไข</button>
+                    <button class="btn btn-primary button-right mb-3" @click="fixinfo(taskDetail)">แก้ไข</button>
                 </div>
 
                 <div class="col-2">
@@ -122,10 +122,7 @@
     </div>
 </template>
 
-
 <script>
-import EditSub from './EditSub.vue';
-
 export default {
     data() {
         return {
@@ -134,7 +131,7 @@ export default {
             newInfoDetails: {
                 infodetails: '',
                 infostart: '',
-                infoend: ''
+                infoend: '',
             }
         };
     },
@@ -149,7 +146,7 @@ export default {
     methods: {
         loadTaskDetail() {
             const allData = JSON.parse(localStorage.getItem('infoData')) || [];
-            const taskId = this.$route.query.infoname; // รับค่าจาก query params
+            const taskId = this.$route.query.infoname;
             this.taskDetail = allData.find(task => task.infoname === taskId) || null;
 
             // เพิ่ม property สำหรับการเพิ่ม process ใหม่ในแต่ละ process
@@ -217,12 +214,12 @@ export default {
             };
         },
         confirmNewProcess(processIndex) {
-            const process = this.taskDetail.processes[processIndex];
-            if (process.newProcessDetails.procesdetails && process.newProcessDetails.processtart && process.newProcessDetails.procesend) {
-                process.subProcesses.push({
-                    procesdetails: process.newProcessDetails.procesdetails,
-                    processtart: process.newProcessDetails.processtart,
-                    procesend: process.newProcessDetails.procesend
+            const newProcessDetails = this.taskDetail.processes[processIndex].newProcessDetails;
+            if (newProcessDetails.procesdetails && newProcessDetails.processtart && newProcessDetails.procesend) {
+                this.taskDetail.processes[processIndex].subProcesses.push({
+                    procesdetails: newProcessDetails.procesdetails,
+                    processtart: newProcessDetails.processtart,
+                    procesend: newProcessDetails.procesend
                 });
 
                 // บันทึกข้อมูลใหม่ลง localStorage
@@ -240,46 +237,30 @@ export default {
                 alert('กรุณากรอกข้อมูลให้ครบถ้วน');
             }
         },
-        fixinfo(taskDetail) {
-            this.$router.push({ name: 'AddInfo', query: { infoname: taskDetail.infoname } });
+        editSub(taskDetail, subItem) {
+            const editType = subItem.infodetails ? 'info' : 'process';
+            this.$router.push({
+                name: 'EditSub',
+                query: {
+                    infoname: taskDetail.infoname,
+                    editType: editType,
+                    editDetail: subItem.infodetails || subItem.procesdetails
+                },
+                params: {
+                    isDate: editType === 'info'  // ตั้งค่า isDate เป็น true หรือ false ตามประเภท
+                }
+            });
         },
         hasAddProcessEntries(processIndex) {
-            const process = this.taskDetail.processes[processIndex];
-            return process && process.subProcesses && process.subProcesses.length > 0;
+            return this.taskDetail.processes[processIndex].subProcesses.length > 0;
         },
-        EditSub(taskDetail) {
-            this.$router.push({ name: 'EditSub', query: {infoname: taskDetail.infoname}});
+        fixinfo(taskDetail) {
+            this.$router.push({ name: 'AddInfo', query: { infoname: taskDetail.infoname } });
         }
     }
 };
 </script>
 
 <style scoped>
-.card {
-    margin-bottom: 10px;
-}
-
-.button-right {
-    float: right;
-}
-
-.mb-2 {
-    margin-bottom: 10px;
-}
-
-.mb-3 {
-    margin-bottom: 15px;
-}
-
-.bg-secondary-custom {
-    background-color: #e9ecef;
-}
-
-.btn-success {
-    background-color: #28a745;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-}
+@import './Sass/Taskdetail.scss';
 </style>
