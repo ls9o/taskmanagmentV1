@@ -92,7 +92,8 @@ data() {
         infotype: '',
         manager: '',
         team: '',
-        processes: []
+        processes: [],
+        
       },
       subInputBoxes: [],
       managers: ['Manager1', 'Manager2', 'Manager3'],

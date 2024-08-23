@@ -12,6 +12,7 @@
             <div class="card-body d-flex justify-content-between">
               <span class="col-4">Name: {{ truncate(item.infoname, 20) }}</span>
               <span class="col-4">Detail: {{ truncate(item.infodetails, 50) }}</span>
+              <span>{{ item.progressPercentage }} %</span>
               <div><i class="fa-solid fa-calendar-days icon-pad"></i>
                 <span class="col">Start: {{ item.infostart ? item.infostart : 'No Start Date' }}</span>
                 <span class="col">/End: {{ item.infoend ? item.infoend : 'No End Date' }}</span>

@@ -3,7 +3,6 @@
     <form @submit.prevent="">
       <h1 class="text-center mb-4">รายละเอียดงาน</h1>
       <p>ความคืบหน้า: {{ progressPercentage }}%</p>
-
       <div class="row" v-if="taskDetail">
         <!-- ข้อมูลทั่วไป -->
         <div>
@@ -145,23 +144,39 @@ export default {
       return this.taskDetail && this.taskDetail.subInputBoxesinfo && this.taskDetail.subInputBoxesinfo.length > 0;
     },
     progressPercentage() {
-            if (!this.taskDetail || !this.taskDetail.processes) return 0;
+        if (!this.taskDetail || !this.taskDetail.processes) return 0;
 
-            const totalProcesses = this.taskDetail.processes.length;
-            let totalProgress = 0;
+        const totalProcesses = this.taskDetail.processes.length;
+        let totalProgress = 0;
 
-            // วนลูปเพื่อคำนวณเปอร์เซ็นต์ความคืบหน้าของ subprocess ในแต่ละ process
-            this.taskDetail.processes.forEach((process) => {
-                const totalSubProcesses = process.subProcesses.length;
-                const completedSubProcesses = process.subProcesses.length; // จำนวน subprocess ที่สมบูรณ์ (สมมติว่าทั้งหมดสมบูรณ์)
+        // วนลูปเพื่อคำนวณเปอร์เซ็นต์ความคืบหน้าของ subprocess ในแต่ละ process
+        this.taskDetail.processes.forEach((process) => {
+            const totalSubProcesses = process.subProcesses.length;
+            const completedSubProcesses = process.subProcesses.length; // สมมติว่าทั้งหมดสมบูรณ์
 
-                if (totalSubProcesses > 0) {
-                    totalProgress += (completedSubProcesses / totalSubProcesses) * (1 / totalProcesses) * 100;
-                }
-            });
+            if (totalSubProcesses > 0) {
+                totalProgress += (completedSubProcesses / totalSubProcesses) * (1 / totalProcesses) * 100;
+            }
+        });
 
-            return totalProgress.toFixed(2); // คืนค่าเปอร์เซ็นต์ความคืบหน้าโดยรวม
+        const progressPercentage = totalProgress.toFixed(2); // เปอร์เซ็นต์ความคืบหน้าโดยรวม
+
+        // บันทึกลงใน infoData
+        let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+
+        // ค้นหา task ที่ต้องการอัปเดต
+        let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
+
+        if (taskIndex !== -1) {
+            // อัปเดต progressPercentage
+            allData[taskIndex].progressPercentage = progressPercentage;
         }
+
+        // เก็บข้อมูลกลับลงใน Local Storage
+        localStorage.setItem('infoData', JSON.stringify(allData));
+
+        return progressPercentage;
+    }
   },
   methods: {
 
@@ -277,7 +292,8 @@ export default {
     },
     fixinfo(taskDetail) {
       this.$router.push({ name: 'AddInfo', query: { infoname: taskDetail.infoname } });
-    }
+    },
+
   }
 };
 </script>
