@@ -15,7 +15,7 @@
         </div>
         <div class="col-6" v-if="!isDate">
           <label class="form-label">จำนวนวันทำงาน:</label>
-          <input class="form-control bg-secondary-custom" type="text" v-model="editData.workingDays">
+          <input class="form-control bg-secondary-custom" type="number" v-model="editData.workingDays">
         </div>
         <div class="col-6">
           <label class="form-label">วันที่จบ:</label>

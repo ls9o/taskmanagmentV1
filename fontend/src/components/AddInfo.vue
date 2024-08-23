@@ -9,7 +9,7 @@
         </div>
         <div class="mb-3">
           <label class="form-label">รายละเอียด:</label>
-          <textarea class="form-control bg-secondary-custom shadow-sm p-3 mb-5 bg-body-tertiary rounded" rows="3" v-model="Datainfo.infodetails"></textarea>
+          <textarea class="form-control bg-secondary-custom shadow-sm p-3 mb-5 bg-body-tertiary rounded" rows="1" v-model="Datainfo.infodetails"></textarea>
         </div>
         <div class="row">
           <div class="col-md-2 mb-3">
@@ -56,11 +56,11 @@
             </div>
             <div class="mb-3">
               <label class="form-label">รายละเอียด:</label>
-              <textarea class="form-control bg-secondary-custom" rows="3" v-model="subInputBox.procesdetails"></textarea>
+              <textarea class="form-control bg-secondary-custom" rows="1" v-model="subInputBox.procesdetails"></textarea>
             </div>
             <div class="col-2 mb-3">
               <label class="form-label">จำนวนวันทำงาน:</label>
-              <input class="form-control bg-secondary-custom" type="text" v-model="subInputBox.processtart">
+              <input class="form-control bg-secondary-custom" type="number" v-model="subInputBox.processtart">
             </div>
             <div class="col-2 mb-3">
               <label class="form-label">กำหนดการส่ง:</label>
@@ -103,6 +103,7 @@ data() {
     this.loadTaskData();
   },
   methods: {
+    // loadTaskData ไว้ดึงข้อมูลจาก card ที่เราต้องการแก้ไข
     loadTaskData() {
       const allData = JSON.parse(localStorage.getItem('infoData')) || [];
       const taskId = this.$route.query.infoname;
@@ -113,10 +114,11 @@ data() {
         this.subInputBoxes = taskData.processes;
       }
     },
+    // confirminfo เมื่อกดปุ่มยืนยันจะบันทึกข้อมูลทั้งหมดที่กรอกพร้อมกับprocessย่อย
     confirminfo() {
-      this.Datainfo.processes = this.subInputBoxes;
+      this.Datainfo.processes = this.subInputBoxes; //นำค่า SubInputBoxes มาเมื่อแก้ไขข้อมูลจาก component มาแทนค่า Processes
 
-      let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+      let allData = JSON.parse(localStorage.getItem('infoData')) || []; 
       const newEntry = { ...this.Datainfo }; // Clone Datainfo to avoid reference issues
 
       // Check if there is already an entry with the same `infoname`
@@ -130,10 +132,11 @@ data() {
         allData.push(newEntry);
       }
 
-      localStorage.setItem('infoData', JSON.stringify(allData));
+      localStorage.setItem('infoData', JSON.stringify(allData));  // นำข้อมูลที่ update แล้วกลับไปเก็บใน localStorage ภายใต้ Key infoData
       alert('บันทึกข้อมูลสำเร็จ');
       this.$router.push({ name: 'TaskDetail', query: { infoname: this.Datainfo.infoname } });
     },
+    // เมื่อกดปุ่ม addprocess เพิ่มข้อมูลสำหรับกรอก proces ย่อย
     addProcess() {
       this.subInputBoxes.push({
         procesname: '',
@@ -142,6 +145,7 @@ data() {
         procesend: ''
       });
     },
+    // ลบข้อมูลย่อย
     delProcess(index) {
       this.subInputBoxes.splice(index, 1);
     }
