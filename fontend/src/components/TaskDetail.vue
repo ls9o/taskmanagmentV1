@@ -10,6 +10,7 @@
           <p>รายละเอียด: {{ taskDetail.infodetails }}</p>
           <p>วันที่เริ่ม: {{ taskDetail.infostart }}</p>
           <p>วันที่จบ: {{ taskDetail.infoend }}</p>
+          <p>จำนวนวันทั้งหมด: {{ taskDetail.dayDiff }}</p>
           <p>ประเภทงาน: {{ taskDetail.infotype }}</p>
           <p>Project Manager: {{ taskDetail.manager }}</p>
           <p>ทีม: {{ taskDetail.team }}</p>

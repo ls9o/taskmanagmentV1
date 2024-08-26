@@ -23,6 +23,10 @@
             <input class="form-control bg-secondary-custom" type="date" v-model="Datainfo.infoend">
           </div>
         </div>
+        <div class="col-2 mb-3">
+            <label class="form-label">จำนวนวัน:</label>
+            <input class="form-control bg-secondary-custom" type="text" :value="daysBetween" readonly>
+          </div>
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label">ประเภทงาน:</label><br>
@@ -103,6 +107,36 @@ data() {
   created() {
     this.loadTaskData();
   },
+  computed: {
+  daysBetween() {
+    const startDate = new Date(this.Datainfo.infostart);
+    const endDate = new Date(this.Datainfo.infoend);
+
+    if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
+      const timeDiff = endDate - startDate;
+      const validDayDiff = timeDiff / (1000 * 60 * 60 * 24);
+
+      // โหลดข้อมูลจาก Local Storage
+      let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+
+      // หาตำแหน่งของ task ที่ต้องการอัปเดต
+      let taskIndex = allData.findIndex(item => item.infoname === this.Datainfo.infoname);
+
+      // ถ้าพบข้อมูลที่ต้องการอัปเดต
+      if (taskIndex !== -1) {
+        // อัปเดตค่า validDayDiff
+        allData[taskIndex].dayDiff = validDayDiff >= 0 ? validDayDiff : 0;
+      }
+
+      // เก็บข้อมูลกลับลงใน Local Storage
+      localStorage.setItem('infoData', JSON.stringify(allData));
+
+      return validDayDiff >= 0 ? validDayDiff : 0;
+    }
+
+    return 0; // หากข้อมูลยังไม่ครบ ให้คืนค่า 0
+  }
+},
   methods: {
     // loadTaskData ไว้ดึงข้อมูลจาก card ที่เราต้องการแก้ไข
     loadTaskData() {
@@ -117,26 +151,30 @@ data() {
     },
     // confirminfo เมื่อกดปุ่มยืนยันจะบันทึกข้อมูลทั้งหมดที่กรอกพร้อมกับprocessย่อย
     confirminfo() {
-      this.Datainfo.processes = this.subInputBoxes; //นำค่า SubInputBoxes มาเมื่อแก้ไขข้อมูลจาก component มาแทนค่า Processes
+  this.Datainfo.processes = this.subInputBoxes; //นำค่า SubInputBoxes มาเมื่อแก้ไขข้อมูลจาก component มาแทนค่า Processes
 
-      let allData = JSON.parse(localStorage.getItem('infoData')) || []; 
-      const newEntry = { ...this.Datainfo }; // Clone Datainfo to avoid reference issues
+  // อัปเดตค่า dayDiff ใน Datainfo
+  this.Datainfo.dayDiff = this.daysBetween; 
 
-      // Check if there is already an entry with the same `infoname`
-      const existingIndex = allData.findIndex(entry => entry.infoname === newEntry.infoname);
+  let allData = JSON.parse(localStorage.getItem('infoData')) || []; 
+  const newEntry = { ...this.Datainfo }; // Clone Datainfo to avoid reference issues
 
-      if (existingIndex > -1) {
-        // If found, update the existing entry
-        allData[existingIndex] = newEntry;
-      } else {
-        // If not found, add a new entry
-        allData.push(newEntry);
-      }
+  // Check if there is already an entry with the same `infoname`
+  const existingIndex = allData.findIndex(entry => entry.infoname === newEntry.infoname);
 
-      localStorage.setItem('infoData', JSON.stringify(allData));  // นำข้อมูลที่ update แล้วกลับไปเก็บใน localStorage ภายใต้ Key infoData
-      alert('บันทึกข้อมูลสำเร็จ');
-      this.$router.push({ name: 'TaskDetail', query: { infoname: this.Datainfo.infoname } });
-    },
+  if (existingIndex > -1) {
+    // If found, update the existing entry
+    allData[existingIndex] = newEntry;
+  } else {
+    // If not found, add a new entry
+    allData.push(newEntry);
+  }
+
+  localStorage.setItem('infoData', JSON.stringify(allData));  // นำข้อมูลที่ update แล้วกลับไปเก็บใน localStorage ภายใต้ Key infoData
+  alert('บันทึกข้อมูลสำเร็จ');
+  this.$router.push({ name: 'TaskDetail', query: { infoname: this.Datainfo.infoname } });
+},
+
     // เมื่อกดปุ่ม addprocess เพิ่มข้อมูลสำหรับกรอก proces ย่อย
     addProcess() {
       this.subInputBoxes.push({
