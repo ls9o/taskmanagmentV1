@@ -2,7 +2,7 @@
   <div class="container-xl">
     <form @submit.prevent="">
       <h1 class="text-center mb-4">รายละเอียดงาน</h1>
-      <p>ความคืบหน้า: {{ progressPercentage }}%</p>
+      <p>ความคืบหน้า: {{ test_value }} %</p>
       <div class="row" v-if="taskDetail">
         <!-- ข้อมูลทั่วไป -->
         <div>
@@ -114,10 +114,6 @@
         <div class="col-1">
           <button class="btn btn-primary button-right mb-3" @click="fixinfo(taskDetail)">แก้ไข</button>
         </div>
-
-        <div class="col-2">
-          <button class="btn btn-success but">บันทึก</button>
-        </div>
       </div>
     </form>
   </div>
@@ -129,6 +125,9 @@ export default {
     return {
       taskDetail: null,   // เก็บข้อมูลรายละเอียดของ task
       isAddingInfo: false, // ตรวจสอบว่ากำลังเพิ่มข้อมูล Info อยู่หรือไม่
+      processes: JSON.parse(localStorage.getItem('processes')) || [], // ดึงค่า processes จาก Local Storage
+      dayDiff: JSON.parse(localStorage.getItem('dayDiff')) || 0,      // ดึงค่า dayDiff จาก Local Storage
+      test_value:0,
       newInfoDetails: {   // ข้อมูลที่จะถูกเพิ่มใน Info ใหม่
         infodetails: '', // รายละเอียดใหม่ของ Info
         infostart: '',   // วันที่เริ่มของ Info ใหม่
@@ -138,72 +137,89 @@ export default {
   },
   mounted() {
     this.loadTaskDetail(); // เรียกใช้ฟังก์ชันเพื่อโหลดรายละเอียดของ task เมื่อคอมโพเนนต์ถูก mount
+    this.progressPercentage();
   },
   computed: {
     // เป็น property ที่คำนวณว่าจะคืนค่า true หรือ false
     hasAddInfoEntries() {
       return this.taskDetail && this.taskDetail.subInputBoxesinfo && this.taskDetail.subInputBoxesinfo.length > 0;
     },
-    progressPercentage() {
-        if (!this.taskDetail || !this.taskDetail.processes) return 0;
+    // progressPercentage() {
+    //   console.log(this.dayDiff);
+      
+    //   // ตรวจสอบว่า dayDiff มีค่ามากกว่า 0 หรือไม่
+    //   if (this.dayDiff <= 0) {
+    //     return 0; // ถ้า dayDiff ไม่ถูกกำหนดหรือเท่ากับ 0 ให้คืนค่า 0
+    //   }
 
-        const totalProcesses = this.taskDetail.processes.length;
-        let totalProgress = 0;
+    //   let totalProcessStart = 0;
 
-        // วนลูปเพื่อคำนวณเปอร์เซ็นต์ความคืบหน้าของ subprocess ในแต่ละ process
-        this.taskDetail.processes.forEach((process) => {
-            const totalSubProcesses = process.subProcesses.length;
-            const completedSubProcesses = process.subProcesses.length; // สมมติว่าทั้งหมดสมบูรณ์
+    //   // คำนวณผลรวมของ processes.processtart
+    //   this.processes.forEach(process => {
+    //     totalProcessStart += process.processtart;
+    //   });
 
-            if (totalSubProcesses > 0) {
-                totalProgress += (completedSubProcesses / totalSubProcesses) * (1 / totalProcesses) * 100;
-            }
-        });
+    //   // คำนวณ progressPercentage
+    //   return (totalProcessStart / this.dayDiff) * 100;
+    // }
+    
+    // progressPercentage() {
+    //     if (!this.taskDetail || !this.taskDetail.processes) return 0;
 
-        const progressPercentage = totalProgress.toFixed(2); // เปอร์เซ็นต์ความคืบหน้าโดยรวม
+    //     const totalProcesses = this.taskDetail.processes.length;
+    //     let totalProgress = 0;
 
-        // บันทึกลงใน infoData
-        let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+    //     // วนลูปเพื่อคำนวณเปอร์เซ็นต์ความคืบหน้าของ subprocess ในแต่ละ process
+    //     this.taskDetail.processes.forEach((process) => {
+    //         const totalSubProcesses = process.subProcesses.length;
+    //         const completedSubProcesses = process.subProcesses.length; // สมมติว่าทั้งหมดสมบูรณ์
 
-        // ค้นหา task ที่ต้องการอัปเดต
-        let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
+    //         if (totalSubProcesses > 0) {
+    //             totalProgress += (completedSubProcesses / totalSubProcesses) * (1 / totalProcesses) * 100;
+    //         }
+    //     });
 
-        if (taskIndex !== -1) {
-            // อัปเดต progressPercentage
-            allData[taskIndex].progressPercentage = progressPercentage;
-        }
+    //     const progressPercentage = totalProgress.toFixed(2); // เปอร์เซ็นต์ความคืบหน้าโดยรวม
 
-        // เก็บข้อมูลกลับลงใน Local Storage
-        localStorage.setItem('infoData', JSON.stringify(allData));
+    //     // บันทึกลงใน infoData
+    //     let allData = JSON.parse(localStorage.getItem('infoData')) || [];
 
-        return progressPercentage;
-    }
+    //     // ค้นหา task ที่ต้องการอัปเดต
+    //     let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
+
+    //     if (taskIndex !== -1) {
+    //         // อัปเดต progressPercentage
+    //         allData[taskIndex].progressPercentage = progressPercentage;
+    //     }
+
+    //     // เก็บข้อมูลกลับลงใน Local Storage
+    //     localStorage.setItem('infoData', JSON.stringify(allData));
+
+    //     return progressPercentage;
+    // }
+    
   },
   methods: {
 
     loadTaskDetail() {
-      const allData = JSON.parse(localStorage.getItem('infoData')) || []; // ดึงข้อมูลทั้งหมดจาก Local Storage
-      const taskId = this.$route.query.infoname; // ดึงชื่อ info จาก query ใน route
-      this.taskDetail = allData.find(task => task.infoname === taskId) || null; // ค้นหางานตามชื่องาน (infoname) ในข้อมูลทั้งหมด
+  const allData = JSON.parse(localStorage.getItem('infoData')) || []; // ดึงข้อมูลทั้งหมดจาก Local Storage
+  const taskId = this.$route.query.infoname; // ดึงชื่อ info จาก query ใน route
+  this.taskDetail = allData.find(task => task.infoname === taskId) || null; // ค้นหางานตามชื่องาน (infoname) ในข้อมูลทั้งหมด
 
-      // เพิ่ม property สำหรับการเพิ่ม process ใหม่ในแต่ละ process
-      if (this.taskDetail && this.taskDetail.processes) {
-        this.taskDetail.processes = this.taskDetail.processes.map(process => ({
-          ...process,
-          isAdding: false, // ตรวจสอบว่า process กำลังเพิ่มอยู่หรือไม่
-          newProcessDetails: {
-            procesdetails: '',  // รายละเอียดของ process ใหม่
-            processtart: '',    // จำนวนวันทำงานใหม่
-            procesend: ''       // วันที่สิ้นสุดใหม่
-          },
-          subProcesses: process.subProcesses || []    // เก็บข้อมูล subProcesses ถ้ามี
-        }));
-      }
+  // เพิ่ม property สำหรับการเพิ่ม process ใหม่ในแต่ละ process
+  if (this.taskDetail && this.taskDetail.processes) {
+    this.taskDetail.processes = this.taskDetail.processes.map(process => ({
+      ...process,
+      isAdding: false, // ตรวจสอบว่า process กำลังเพิ่มอยู่หรือไม่
+      // ย้ายการกำหนดค่า newProcessDetails ออกจากที่นี่
+      subProcesses: process.subProcesses || []    // เก็บข้อมูล subProcesses ถ้ามี
+    }));
+  }
 
-      // เพิ่ม property สำหรับการเพิ่ม info ใหม่
-      if (this.taskDetail) {
-        this.taskDetail.subInputBoxesinfo = this.taskDetail.subInputBoxesinfo || [];
-      }
+  // เพิ่ม property สำหรับการเพิ่ม info ใหม่
+  if (this.taskDetail) {
+    this.taskDetail.subInputBoxesinfo = this.taskDetail.subInputBoxesinfo || [];
+  }
     },
     startAddingInfo() {
       this.isAddingInfo = true;
@@ -240,8 +256,13 @@ export default {
       }
     },
     startAddingProcess(processIndex) {
-      this.taskDetail.processes[processIndex].isAdding = true;    // เริ่มต้นการเพิ่ม process ใหม่ใน index ที่ระบุ
-    },
+  this.taskDetail.processes[processIndex].isAdding = true;
+  this.taskDetail.processes[processIndex].newProcessDetails = {
+    procesdetails: '',
+    processtart: '',
+    procesend: ''
+  };
+},
     cancelAddingProcess(processIndex) {
       this.taskDetail.processes[processIndex].isAdding = false;   // ยกเลิกการเพิ่ม process ใหม่
       this.taskDetail.processes[processIndex].newProcessDetails = {
@@ -251,29 +272,31 @@ export default {
       };
     },
     confirmNewProcess(processIndex) {
-      const newProcessDetails = this.taskDetail.processes[processIndex].newProcessDetails;
-      if (newProcessDetails.procesdetails && newProcessDetails.processtart && newProcessDetails.procesend) {
-        this.taskDetail.processes[processIndex].subProcesses.push({
-          procesdetails: newProcessDetails.procesdetails,
-          processtart: newProcessDetails.processtart,
-          procesend: newProcessDetails.procesend
-        });
+  const newProcessDetails = this.taskDetail.processes[processIndex].newProcessDetails;
 
-        // บันทึกข้อมูลใหม่ลง localStorage
-        const allData = JSON.parse(localStorage.getItem('infoData')) || [];
-        const taskIndex = allData.findIndex(task => task.infoname === this.taskDetail.infoname);
+  // ตรวจสอบว่าค่าใหม่ไม่เป็นค่าว่างก่อนที่จะบันทึก
+  if (newProcessDetails.procesdetails.trim() !== '' && newProcessDetails.processtart !== '' && newProcessDetails.procesend !== '') {
+    this.taskDetail.processes[processIndex].subProcesses.push({
+      procesdetails: newProcessDetails.procesdetails,
+      processtart: newProcessDetails.processtart,
+      procesend: newProcessDetails.procesend
+    });
 
-        if (taskIndex > -1) {
-          allData[taskIndex] = this.taskDetail;
-          localStorage.setItem('infoData', JSON.stringify(allData));
-          alert('บันทึกข้อมูลใหม่สำเร็จ');
-        }
+    // บันทึกข้อมูลใหม่ลง localStorage
+    const allData = JSON.parse(localStorage.getItem('infoData')) || [];
+    const taskIndex = allData.findIndex(task => task.infoname === this.taskDetail.infoname);
 
-        this.cancelAddingProcess(processIndex);
-      } else {
-        alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-      }
-    },
+    if (taskIndex > -1) {
+      allData[taskIndex] = this.taskDetail;
+      localStorage.setItem('infoData', JSON.stringify(allData));
+      alert('บันทึกข้อมูลใหม่สำเร็จ');
+    }
+
+    this.cancelAddingProcess(processIndex);
+  } else {
+    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+  }
+},
     editSub(taskDetail, subItem) {
       const editType = subItem.infodetails ? 'info' : 'process';
       this.$router.push({
@@ -294,7 +317,33 @@ export default {
     fixinfo(taskDetail) {
       this.$router.push({ name: 'AddInfo', query: { infoname: taskDetail.infoname } });
     },
+    progressPercentage() {
+  if (!this.taskDetail || !this.taskDetail.dayDiff || this.taskDetail.dayDiff <= 0) {
+    this.test_value = 0;
+    return;
+  }
 
+  let totalCompletedDays = 0;
+  let totalDays = this.taskDetail.dayDiff;
+
+  this.taskDetail.processes.forEach(process => {
+    // Check if subProcesses has any confirmed data
+    if (process.subProcesses.length > 0) {
+      totalCompletedDays += process.processtart;
+    }
+  });
+
+  this.test_value = ((totalCompletedDays / totalDays) * 100).toFixed(2);
+
+  // Update the progress percentage in localStorage
+  const allData = JSON.parse(localStorage.getItem('infoData')) || [];
+  const taskIndex = allData.findIndex(task => task.infoname === this.taskDetail.infoname);
+
+  if (taskIndex !== -1) {
+    allData[taskIndex].progressPercentage = this.test_value;
+    localStorage.setItem('infoData', JSON.stringify(allData));
+  }
+},
   }
 };
 </script>
