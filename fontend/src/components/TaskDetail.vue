@@ -177,25 +177,6 @@ export default {
     return progressPercentage;
   }
     // progressPercentage() {
-    //   console.log(this.dayDiff);
-      
-    //   // ตรวจสอบว่า dayDiff มีค่ามากกว่า 0 หรือไม่
-    //   if (this.dayDiff <= 0) {
-    //     return 0; // ถ้า dayDiff ไม่ถูกกำหนดหรือเท่ากับ 0 ให้คืนค่า 0
-    //   }
-
-    //   let totalProcessStart = 0;
-
-    //   // คำนวณผลรวมของ processes.processtart
-    //   this.processes.forEach(process => {
-    //     totalProcessStart += process.processtart;
-    //   });
-
-    //   // คำนวณ progressPercentage
-    //   return (totalProcessStart / this.dayDiff) * 100;
-    // }
-    
-    // progressPercentage() {
     //     if (!this.taskDetail || !this.taskDetail.processes) return 0;
 
     //     const totalProcesses = this.taskDetail.processes.length;
