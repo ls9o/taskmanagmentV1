@@ -2,7 +2,7 @@
   <div class="container-xl">
     <form @submit.prevent="">
       <h1 class="text-center mb-4">รายละเอียดงาน</h1>
-      <p>ความคืบหน้า: {{ test_value }} %</p>
+      <p>ความคืบหน้า: {{ progressPercentage }} %</p>
       <div class="row" v-if="taskDetail">
         <!-- ข้อมูลทั่วไป -->
         <div>
@@ -127,7 +127,7 @@ export default {
       isAddingInfo: false, // ตรวจสอบว่ากำลังเพิ่มข้อมูล Info อยู่หรือไม่
       processes: JSON.parse(localStorage.getItem('processes')) || [], // ดึงค่า processes จาก Local Storage
       dayDiff: JSON.parse(localStorage.getItem('dayDiff')) || 0,      // ดึงค่า dayDiff จาก Local Storage
-      test_value:0,
+      Percentage:0,
       newInfoDetails: {   // ข้อมูลที่จะถูกเพิ่มใน Info ใหม่
         infodetails: '', // รายละเอียดใหม่ของ Info
         infostart: '',   // วันที่เริ่มของ Info ใหม่
@@ -137,13 +137,45 @@ export default {
   },
   mounted() {
     this.loadTaskDetail(); // เรียกใช้ฟังก์ชันเพื่อโหลดรายละเอียดของ task เมื่อคอมโพเนนต์ถูก mount
-    this.progressPercentage();
+    this.progressPercentage;
   },
   computed: {
     // เป็น property ที่คำนวณว่าจะคืนค่า true หรือ false
     hasAddInfoEntries() {
       return this.taskDetail && this.taskDetail.subInputBoxesinfo && this.taskDetail.subInputBoxesinfo.length > 0;
     },
+      progressPercentage() {
+    if (!this.taskDetail || !this.taskDetail.dayDiff || this.taskDetail.dayDiff <= 0) {
+      return 0;
+    }
+
+    let totalCompletedDays = 0;
+    let totalDays = this.taskDetail.dayDiff;
+
+    this.taskDetail.processes.forEach(process => {
+      if (process.subProcesses.length > 0) {
+        totalCompletedDays += process.processtart;
+      }
+    });
+
+    const progressPercentage = ((totalCompletedDays / totalDays) * 100).toFixed(2);
+
+    // Update progressPercentage in infoData and save to Local Storage
+    let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+
+    // Find the task that needs to be updated
+    let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
+
+    if (taskIndex !== -1) {
+      // Update the progressPercentage for the task
+      allData[taskIndex].progressPercentage = progressPercentage;
+    }
+
+    // Save the updated infoData back to Local Storage
+    localStorage.setItem('infoData', JSON.stringify(allData));
+
+    return progressPercentage;
+  }
     // progressPercentage() {
     //   console.log(this.dayDiff);
       
@@ -317,33 +349,6 @@ export default {
     fixinfo(taskDetail) {
       this.$router.push({ name: 'AddInfo', query: { infoname: taskDetail.infoname } });
     },
-    progressPercentage() {
-  if (!this.taskDetail || !this.taskDetail.dayDiff || this.taskDetail.dayDiff <= 0) {
-    this.test_value = 0;
-    return;
-  }
-
-  let totalCompletedDays = 0;
-  let totalDays = this.taskDetail.dayDiff;
-
-  this.taskDetail.processes.forEach(process => {
-    // Check if subProcesses has any confirmed data
-    if (process.subProcesses.length > 0) {
-      totalCompletedDays += process.processtart;
-    }
-  });
-
-  this.test_value = ((totalCompletedDays / totalDays) * 100).toFixed(2);
-
-  // Update the progress percentage in localStorage
-  const allData = JSON.parse(localStorage.getItem('infoData')) || [];
-  const taskIndex = allData.findIndex(task => task.infoname === this.taskDetail.infoname);
-
-  if (taskIndex !== -1) {
-    allData[taskIndex].progressPercentage = this.test_value;
-    localStorage.setItem('infoData', JSON.stringify(allData));
-  }
-},
   }
 };
 </script>
