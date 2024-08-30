@@ -176,41 +176,6 @@ export default {
 
     return progressPercentage;
   }
-    // progressPercentage() {
-    //     if (!this.taskDetail || !this.taskDetail.processes) return 0;
-
-    //     const totalProcesses = this.taskDetail.processes.length;
-    //     let totalProgress = 0;
-
-    //     // วนลูปเพื่อคำนวณเปอร์เซ็นต์ความคืบหน้าของ subprocess ในแต่ละ process
-    //     this.taskDetail.processes.forEach((process) => {
-    //         const totalSubProcesses = process.subProcesses.length;
-    //         const completedSubProcesses = process.subProcesses.length; // สมมติว่าทั้งหมดสมบูรณ์
-
-    //         if (totalSubProcesses > 0) {
-    //             totalProgress += (completedSubProcesses / totalSubProcesses) * (1 / totalProcesses) * 100;
-    //         }
-    //     });
-
-    //     const progressPercentage = totalProgress.toFixed(2); // เปอร์เซ็นต์ความคืบหน้าโดยรวม
-
-    //     // บันทึกลงใน infoData
-    //     let allData = JSON.parse(localStorage.getItem('infoData')) || [];
-
-    //     // ค้นหา task ที่ต้องการอัปเดต
-    //     let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
-
-    //     if (taskIndex !== -1) {
-    //         // อัปเดต progressPercentage
-    //         allData[taskIndex].progressPercentage = progressPercentage;
-    //     }
-
-    //     // เก็บข้อมูลกลับลงใน Local Storage
-    //     localStorage.setItem('infoData', JSON.stringify(allData));
-
-    //     return progressPercentage;
-    // }
-    
   },
   methods: {
 
