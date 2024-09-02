@@ -1,7 +1,74 @@
-.colorbar {
-    color: #073e70;
-}
-
-.nav-link.active {
+.container-fluid-nav {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: #4267B2; /* สีพื้นหลังของ navbar */
+  }
+  
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+  }
+  
+  ul.nav{
+    padding-left: 1%;
+  }
+  
+  .nav-link {
+    color: #fff !important; /* สีตัวอักษร */
+    font-weight: 500;
+    text-decoration: none;
+  }
+  
+  .nav-link.active {
     font-weight: bold;
   }
+  
+  .nav-link:hover {
+    color: #ccc; /* สีเมื่อ hover */
+  }
+  
+  .nav {
+    justify-content: flex-start !important;
+    margin-left: 0 !important;
+    margin-bottom: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .custom-btn {
+    background-color: #0baa40 !important; /* สีพื้นหลัง */
+    color: #ffffff !important; /* สีตัวอักษร */
+  }
+  
+  .custom-btn:hover {
+    background-color: #15973a !important; /* สีพื้นหลังเมื่อ hover */
+    border-color: #15973a !important; /* สีขอบเมื่อ hover */
+  }
+  
+  
+  .dropdown{
+    padding-right: 1%;
+  }
+    .dropdown-toggle::after {
+      margin-left: 10px;
+    }
+    
+    .dropdown-menu {
+      min-width: 150px;
+    }
+    
+    .dropdown-item {
+      padding: 8px 20px;
+    }
+    
+    .dropdown-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    img.rounded-circle {
+      border-radius: 50%;
+    }
+    

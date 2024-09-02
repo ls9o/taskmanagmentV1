@@ -1,3 +1,13 @@
+.maindetail {
+    border: 1px solid #ccc; /* ลดความหนาของกรอบ */
+    padding: 15px; /* ลดช่องว่างภายในกรอบ */
+    border-radius: 5px; /* ลดความโค้งมนของขอบ */
+    background-color: #ffffff; /* กำหนดสีพื้นหลังให้เป็นสีเทาอ่อน */
+    width: 100%; /* ขยายความกว้างให้เต็มพื้นที่ */
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0); /* เพิ่มเงาให้กรอบดูมีมิติ */
+    margin-bottom: 0.5cm;
+  }
+
 .card {
     margin-bottom: 10px;
 }
