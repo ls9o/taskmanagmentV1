@@ -22,7 +22,9 @@
               </button>
             </div>
           </div>
-          <div class="pagination ">
+
+          <!-- Pagination ด้านล่างสำหรับ My Project -->
+          <div class="pagination">
             <button @click="changePageDataInfo(currentPageDataInfo - 1)"
               :disabled="currentPageDataInfo === 1">Previous</button>
             <span>Page {{ currentPageDataInfo }} of {{ totalPagesDataInfo }}</span>
@@ -34,6 +36,7 @@
           <h1 class="text-Result">No Result</h1>
         </div>
       </div>
+
       <div class="col-12 section-half">
       <h1>In Team</h1>
         <div v-if="paginatedDataInTeam.length > 0">
