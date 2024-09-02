@@ -5,7 +5,7 @@
       <div class="row mb-3">
         <div class="col">
           <label class="form-label">รายละเอียด:</label>
-          <textarea class="form-control bg-secondary-custom" rows="5" v-model="editData.editDetail"></textarea>
+          <textarea class="form-control bg-secondary-custom" rows="3" v-model="editData.editDetail"></textarea>
         </div>
       </div>
       <div class="row mb-3">

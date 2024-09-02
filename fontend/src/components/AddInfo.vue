@@ -16,7 +16,8 @@
             <label class="form-label">วันที่เริ่ม:</label>
             <input class="form-control bg-secondary-custom" type="date" v-model="Datainfo.infostart">
           </div>
-
+        </div>
+        <div class="row">
           <div class="col-2 mb-3">
             <label class="form-label">วันที่จบ:</label>
             <input class="form-control bg-secondary-custom" type="date" v-model="Datainfo.infoend">
@@ -27,7 +28,7 @@
             <input class="form-control bg-secondary-custom" type="text" :value="daysBetween" readonly>
           </div>
         <div class="row">
-          <div class="col-md-8 mb-3">
+          <div class="col-md-6 mb-3">
             <label class="form-label">ประเภทงาน:</label><br>
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" id="internal" value="ภายใน" v-model="Datainfo.infotype">
@@ -61,7 +62,6 @@
               <label class="form-label">รายละเอียด:</label>
               <textarea class="form-control bg-secondary-custom" rows="1" v-model="subInputBox.procesdetails"></textarea>
             </div>
-            <div class="row">
             <div class="col-2 mb-3">
               <label class="form-label">จำนวนวันทำงาน:</label>
               <input class="form-control bg-secondary-custom" type="number" v-model="subInputBox.processtart">
@@ -70,12 +70,11 @@
               <label class="form-label">กำหนดการส่ง:</label>
               <input class="form-control bg-secondary-custom" type="date" v-model="subInputBox.procesend">
             </div>
-          </div>
             <button class="btn btn-danger me-2" type="button" @click="delProcess(index)">ลบ</button>
           </div>
         </div>
         <div class="mb-3">
-          <button type="button" class="btn btn-secondary" @click="addProcess">add process</button>
+          <button type="button" class="btn btn-secondary" @click="addProcess">เพิ่ม process</button>
         </div>
         <div class="mb-3">
           <button type="submit" class="btn btn-success button-right mb-3">ยืนยัน</button>

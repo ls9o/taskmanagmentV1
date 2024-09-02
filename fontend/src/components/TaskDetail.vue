@@ -2,18 +2,14 @@
   <div class="container-xl">
     <form @submit.prevent="">
       <h1 class="text-center mb-4">รายละเอียดงาน</h1>
+      <p>ความคืบหน้า: {{ progressPercentage }} %</p>
       <div class="row" v-if="taskDetail">
         <!-- ข้อมูลทั่วไป -->
         <div>
-          <div class="row">
-            <p class="col-10">ชื่องาน: {{ taskDetail.infoname }}</p>
-            <p class="col-2">ความคืบหน้า: {{ progressPercentage }} %</p>
-          </div>
+          <p>ชื่องาน: {{ taskDetail.infoname }}</p>
           <p>รายละเอียด: {{ taskDetail.infodetails }}</p>
-          <div class="row">
-            <p class="col-2">วันที่เริ่ม: {{ taskDetail.infostart }}</p>
-            <p class="col-2">วันที่จบ: {{ taskDetail.infoend }}</p>
-          </div>
+          <p>วันที่เริ่ม: {{ taskDetail.infostart }}</p>
+          <p>วันที่จบ: {{ taskDetail.infoend }}</p>
           <p>จำนวนวันทั้งหมด: {{ taskDetail.dayDiff }}</p>
           <p>ประเภทงาน: {{ taskDetail.infotype }}</p>
           <p>Project Manager: {{ taskDetail.manager }}</p>
@@ -28,26 +24,22 @@
         <!-- แสดงฟอร์ม subInputBoxinfo เมื่อกดปุ่ม addinfo และไม่มีข้อมูลใน subInputBoxesinfo -->
         <div v-if="isAddingInfo && !hasAddInfoEntries">
           <div class="card mb-3">
-            <div class="card-body mb-2">
+            <div class="card-body mb-3">
               <label class="form-label">รายละเอียด:</label>
-              <textarea class="form-control bg-secondary-custom" rows="2"
+              <textarea class="form-control bg-secondary-custom" rows="3"
                 v-model="newInfoDetails.infodetails"></textarea>
             </div>
-            <div class="row">
-              <div class="card-body col-2 mb-3 ms-2">
-                <label class="form-label">วันที่เริ่ม:</label>
-                <input class="form-control bg-secondary-custom" type="date" v-model="newInfoDetails.infostart">
-              </div>
-              <div class="card-body col-2 mb-3">
-                <label class="form-label">วันที่จบ:</label>
-                <input class="form-control bg-secondary-custom" type="date" v-model="newInfoDetails.infoend">
-              </div>
-              <div class="col-6"></div>
+            <div class="card-body col-2 mb-3">
+              <label class="form-label">วันที่เริ่ม:</label>
+              <input class="form-control bg-secondary-custom" type="date" v-model="newInfoDetails.infostart">
             </div>
-
-            <div class="d-flex justify-content-end pe-3">
-              <button class="btn btn-success mb-2 me-2" type="button" @click="confirmNewInfo">บันทึก</button>
+            <div class="card-body col-2 mb-3">
+              <label class="form-label">วันที่จบ:</label>
+              <input class="form-control bg-secondary-custom" type="date" v-model="newInfoDetails.infoend">
+            </div>
+            <div>
               <button class="btn btn-danger mb-2" type="button" @click="cancelAddingInfo">ยกเลิก</button>
+              <button class="btn btn-success mb-2" type="button" @click="confirmNewInfo">บันทึก</button>
             </div>
           </div>
         </div>
@@ -68,7 +60,7 @@
             <h5 class="card-title">ชื่อ Process: {{ process.procesname }}</h5>
             <p class="card-text">รายละเอียด: {{ process.procesdetails }}</p>
             <p class="card-text">จำนวนวันทำงาน: {{ process.processtart }} <label>วัน</label></p>
-            <p class="card-text">วันกำหนดส่ง: {{ process.procesend }}</p>
+            <p class="card-text">วันที่จบ: {{ process.procesend }}</p>
 
             <!-- แสดงปุ่ม addprocess เฉพาะการ์ดนี้ -->
             <div v-if="!hasAddProcessEntries(processIndex) && !process.isAdding">
@@ -84,27 +76,22 @@
                   <textarea class="form-control bg-secondary-custom" rows="3"
                     v-model="process.newProcessDetails.procesdetails"></textarea>
                 </div>
-
-                <div class="row">
-                  <div class="card-body col-2 mb-3 ms-2">
-                    <label class="form-label">จำนวนวันทำงาน:</label>
-                    <input class="form-control bg-secondary-custom" type="number"
-                      v-model="process.newProcessDetails.processtart">
-                  </div>
-                  <div class="card-body col-2 mb-3">
-                    <label class="form-label">กำหนดการส่ง:</label>
-                    <input class="form-control bg-secondary-custom" type="date"
-                      v-model="process.newProcessDetails.procesend">
-                  </div>
-                  <div class="col-6"></div>
+                <div class="card-body col-2 mb-3">
+                  <label class="form-label">จำนวนวันทำงาน:</label>
+                  <input class="form-control bg-secondary-custom" type="number"
+                    v-model="process.newProcessDetails.processtart">
                 </div>
-                <div class="d-flex justify-content-end pe-3">
-                  <button class="btn btn-success mb-2 me-2" type="button"
-                    @click="confirmNewProcess(processIndex)">บันทึก</button>
-                  <button class="btn btn-danger mb-2 " type="button"
+                <div class="card-body col-2 mb-3">
+                  <label class="form-label">กำหนดการส่ง:</label>
+                  <input class="form-control bg-secondary-custom" type="date"
+                    v-model="process.newProcessDetails.procesend">
+                </div>
+                <div>
+                  <button class="btn btn-danger mb-2" type="button"
                     @click="cancelAddingProcess(processIndex)">ยกเลิก</button>
+                  <button class="btn btn-success mb-2" type="button"
+                    @click="confirmNewProcess(processIndex)">บันทึก</button>
                 </div>
-
               </div>
             </div>
 
@@ -123,9 +110,9 @@
       </div>
 
       <div class="row">
-        <div class="col-10"></div>
-        <div class="col-2">
-          <button class="btn btn-primary button-right mb-3 " @click="fixinfo(taskDetail)">แก้ไข</button>
+        <div class="col-9"></div>
+        <div class="col-1">
+          <button class="btn btn-primary button-right mb-3" @click="fixinfo(taskDetail)">แก้ไข</button>
         </div>
       </div>
     </form>
@@ -140,7 +127,7 @@ export default {
       isAddingInfo: false, // ตรวจสอบว่ากำลังเพิ่มข้อมูล Info อยู่หรือไม่
       processes: JSON.parse(localStorage.getItem('processes')) || [], // ดึงค่า processes จาก Local Storage
       dayDiff: JSON.parse(localStorage.getItem('dayDiff')) || 0,      // ดึงค่า dayDiff จาก Local Storage
-      Percentage: 0,
+      Percentage:0,
       newInfoDetails: {   // ข้อมูลที่จะถูกเพิ่มใน Info ใหม่
         infodetails: '', // รายละเอียดใหม่ของ Info
         infostart: '',   // วันที่เริ่มของ Info ใหม่
@@ -157,60 +144,60 @@ export default {
     hasAddInfoEntries() {
       return this.taskDetail && this.taskDetail.subInputBoxesinfo && this.taskDetail.subInputBoxesinfo.length > 0;
     },
-    progressPercentage() {
-      if (!this.taskDetail || !this.taskDetail.dayDiff || this.taskDetail.dayDiff <= 0) {
-        return 0;
-      }
-
-      let totalCompletedDays = 0;
-      let totalDays = this.taskDetail.dayDiff;
-
-      this.taskDetail.processes.forEach(process => {
-        if (process.subProcesses.length > 0) {
-          totalCompletedDays += process.processtart;
-        }
-      });
-
-      const progressPercentage = ((totalCompletedDays / totalDays) * 100).toFixed(2);
-
-      // Update progressPercentage in infoData and save to Local Storage
-      let allData = JSON.parse(localStorage.getItem('infoData')) || [];
-
-      // Find the task that needs to be updated
-      let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
-
-      if (taskIndex !== -1) {
-        // Update the progressPercentage for the task
-        allData[taskIndex].progressPercentage = progressPercentage;
-      }
-
-      // Save the updated infoData back to Local Storage
-      localStorage.setItem('infoData', JSON.stringify(allData));
-
-      return progressPercentage;
+      progressPercentage() {
+    if (!this.taskDetail || !this.taskDetail.dayDiff || this.taskDetail.dayDiff <= 0) {
+      return 0;
     }
+
+    let totalCompletedDays = 0;
+    let totalDays = this.taskDetail.dayDiff;
+
+    this.taskDetail.processes.forEach(process => {
+      if (process.subProcesses.length > 0) {
+        totalCompletedDays += process.processtart;
+      }
+    });
+
+    const progressPercentage = ((totalCompletedDays / totalDays) * 100).toFixed(2);
+
+    // Update progressPercentage in infoData and save to Local Storage
+    let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+
+    // Find the task that needs to be updated
+    let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
+
+    if (taskIndex !== -1) {
+      // Update the progressPercentage for the task
+      allData[taskIndex].progressPercentage = progressPercentage;
+    }
+
+    // Save the updated infoData back to Local Storage
+    localStorage.setItem('infoData', JSON.stringify(allData));
+
+    return progressPercentage;
+  }
   },
   methods: {
 
     loadTaskDetail() {
-      const allData = JSON.parse(localStorage.getItem('infoData')) || []; // ดึงข้อมูลทั้งหมดจาก Local Storage
-      const taskId = this.$route.query.infoname; // ดึงชื่อ info จาก query ใน route
-      this.taskDetail = allData.find(task => task.infoname === taskId) || null; // ค้นหางานตามชื่องาน (infoname) ในข้อมูลทั้งหมด
+  const allData = JSON.parse(localStorage.getItem('infoData')) || []; // ดึงข้อมูลทั้งหมดจาก Local Storage
+  const taskId = this.$route.query.infoname; // ดึงชื่อ info จาก query ใน route
+  this.taskDetail = allData.find(task => task.infoname === taskId) || null; // ค้นหางานตามชื่องาน (infoname) ในข้อมูลทั้งหมด
 
-      // เพิ่ม property สำหรับการเพิ่ม process ใหม่ในแต่ละ process
-      if (this.taskDetail && this.taskDetail.processes) {
-        this.taskDetail.processes = this.taskDetail.processes.map(process => ({
-          ...process,
-          isAdding: false, // ตรวจสอบว่า process กำลังเพิ่มอยู่หรือไม่
-          // ย้ายการกำหนดค่า newProcessDetails ออกจากที่นี่
-          subProcesses: process.subProcesses || []    // เก็บข้อมูล subProcesses ถ้ามี
-        }));
-      }
+  // เพิ่ม property สำหรับการเพิ่ม process ใหม่ในแต่ละ process
+  if (this.taskDetail && this.taskDetail.processes) {
+    this.taskDetail.processes = this.taskDetail.processes.map(process => ({
+      ...process,
+      isAdding: false, // ตรวจสอบว่า process กำลังเพิ่มอยู่หรือไม่
+      // ย้ายการกำหนดค่า newProcessDetails ออกจากที่นี่
+      subProcesses: process.subProcesses || []    // เก็บข้อมูล subProcesses ถ้ามี
+    }));
+  }
 
-      // เพิ่ม property สำหรับการเพิ่ม info ใหม่
-      if (this.taskDetail) {
-        this.taskDetail.subInputBoxesinfo = this.taskDetail.subInputBoxesinfo || [];
-      }
+  // เพิ่ม property สำหรับการเพิ่ม info ใหม่
+  if (this.taskDetail) {
+    this.taskDetail.subInputBoxesinfo = this.taskDetail.subInputBoxesinfo || [];
+  }
     },
     startAddingInfo() {
       this.isAddingInfo = true;
@@ -247,13 +234,13 @@ export default {
       }
     },
     startAddingProcess(processIndex) {
-      this.taskDetail.processes[processIndex].isAdding = true;
-      this.taskDetail.processes[processIndex].newProcessDetails = {
-        procesdetails: '',
-        processtart: '',
-        procesend: ''
-      };
-    },
+  this.taskDetail.processes[processIndex].isAdding = true;
+  this.taskDetail.processes[processIndex].newProcessDetails = {
+    procesdetails: '',
+    processtart: '',
+    procesend: ''
+  };
+},
     cancelAddingProcess(processIndex) {
       this.taskDetail.processes[processIndex].isAdding = false;   // ยกเลิกการเพิ่ม process ใหม่
       this.taskDetail.processes[processIndex].newProcessDetails = {
@@ -263,31 +250,31 @@ export default {
       };
     },
     confirmNewProcess(processIndex) {
-      const newProcessDetails = this.taskDetail.processes[processIndex].newProcessDetails;
+  const newProcessDetails = this.taskDetail.processes[processIndex].newProcessDetails;
 
-      // ตรวจสอบว่าค่าใหม่ไม่เป็นค่าว่างก่อนที่จะบันทึก
-      if (newProcessDetails.procesdetails.trim() !== '' && newProcessDetails.processtart !== '' && newProcessDetails.procesend !== '') {
-        this.taskDetail.processes[processIndex].subProcesses.push({
-          procesdetails: newProcessDetails.procesdetails,
-          processtart: newProcessDetails.processtart,
-          procesend: newProcessDetails.procesend
-        });
+  // ตรวจสอบว่าค่าใหม่ไม่เป็นค่าว่างก่อนที่จะบันทึก
+  if (newProcessDetails.procesdetails.trim() !== '' && newProcessDetails.processtart !== '' && newProcessDetails.procesend !== '') {
+    this.taskDetail.processes[processIndex].subProcesses.push({
+      procesdetails: newProcessDetails.procesdetails,
+      processtart: newProcessDetails.processtart,
+      procesend: newProcessDetails.procesend
+    });
 
-        // บันทึกข้อมูลใหม่ลง localStorage
-        const allData = JSON.parse(localStorage.getItem('infoData')) || [];
-        const taskIndex = allData.findIndex(task => task.infoname === this.taskDetail.infoname);
+    // บันทึกข้อมูลใหม่ลง localStorage
+    const allData = JSON.parse(localStorage.getItem('infoData')) || [];
+    const taskIndex = allData.findIndex(task => task.infoname === this.taskDetail.infoname);
 
-        if (taskIndex > -1) {
-          allData[taskIndex] = this.taskDetail;
-          localStorage.setItem('infoData', JSON.stringify(allData));
-          alert('บันทึกข้อมูลใหม่สำเร็จ');
-        }
+    if (taskIndex > -1) {
+      allData[taskIndex] = this.taskDetail;
+      localStorage.setItem('infoData', JSON.stringify(allData));
+      alert('บันทึกข้อมูลใหม่สำเร็จ');
+    }
 
-        this.cancelAddingProcess(processIndex);
-      } else {
-        alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-      }
-    },
+    this.cancelAddingProcess(processIndex);
+  } else {
+    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+  }
+},
     editSub(taskDetail, subItem) {
       const editType = subItem.infodetails ? 'info' : 'process';
       this.$router.push({

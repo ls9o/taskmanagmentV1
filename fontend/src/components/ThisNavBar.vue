@@ -4,7 +4,6 @@
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
       <div class="col-md-3 mb-2 mb-md-0">
         <router-link to="/" custom v-slot="{ href, navigate, isActive }">
-          <i class="fa-solid fa-building-columns"></i>
           <a :href="href" @click="navigate" :class="['d-inline-flex', 'link-body-emphasis', 'text-decoration-none', { 'active': isActive }]">
             <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
           </a>
