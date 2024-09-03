@@ -77,8 +77,8 @@
         <div class="mb-3">
           <button type="button" class="btn btn-secondary" @click="addProcess">add process</button>
         </div>
-        <div class="mb-3">
-          <button type="submit" class="btn btn-success button-right mb-3">ยืนยัน</button>
+        <div class="mb-3  text-end">
+          <button type="submit" class="btn btn-success mb-3 button-right">ยืนยัน</button>
         </div>
       </div>
     </form>
