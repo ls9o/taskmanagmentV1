@@ -11,7 +11,7 @@
           <div class="card mb-3" v-for="(item, index) in paginatedDataInfo" :key="index">
             <div class="card-body d-flex justify-content-between">
               <span class="col-4">Name: {{ truncate(item.infoname, 20) }}</span>
-              <span class="col-4">Detail: {{ truncate(item.infodetails, 50) }}</span>
+              <span>{{ item.statusprogress }} %</span>
               <span>{{ item.progressPercentage }} %</span>
               <div><i class="fa-solid fa-calendar-days icon-pad"></i>
                 <span class="col">Start: {{ item.infostart ? item.infostart : 'No Start Date' }}</span>
@@ -40,7 +40,8 @@
           <div class="card mb-3" v-for="(item, index) in paginatedDataInTeam" :key="index">
             <div class="card-body d-flex justify-content-between">
               <span class="col-4">Name: {{ truncate(item.infoname, 20) }}</span>
-              <span class="col-4">Detail: {{ truncate(item.infodetails, 50) }}</span>
+              <span>{{ item.trueprogressPercentage }} %</span>
+              <span>{{ item.progressPercentage }} %</span>
               <span class="col">DayStart: {{ item.infostart ? item.infostart : 'No Start Date' }}</span>
               <span class="col">DayEnd: {{ item.infoend ? item.infoend : 'No End Date' }}</span>
               <button @click="moreinfo(item)" type="button" class="btn btn-outline-primary">

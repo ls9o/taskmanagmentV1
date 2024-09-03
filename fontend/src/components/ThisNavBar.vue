@@ -1,7 +1,8 @@
 <template>
   <!-- lloveanna -->
   <div class="container-fluid-nav">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    <header
+      class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
       <!-- <div class="col-md-3 mb-2 mb-md-0">
         <router-link to="/" custom v-slot="{ href, navigate, isActive }">
           <i class="fa-solid fa-building-columns"></i>
@@ -29,10 +30,22 @@
         </li>
       </ul>
 
-      <div class="col-md-3 text-end">
-        <!-- <button type="button" class="btn btn-outline-primary me-2">Login</button>
-        <button type="button" class="btn btn-primary">Sign-up</button> -->
+      <div class="dropdown">
+        <button class="btn custom-btn dropdown-toggle d-flex align-items-center" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="..//assets/logo.png" alt="User" class="rounded-circle"
+            style="width: 30px; height: 30px; margin-right: 10px;">
+          ARUNEE
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" href="#">บัญชี</a></li>
+          <li><a class="dropdown-item" href="#">ข้อมูลส่วนตัว</a></li>
+        </ul>
       </div>
+      <!-- <div class="col-md-3 text-end">
+        <button type="button" class="btn btn-outline-primary me-2">Login</button>
+        <butto type="button" class="btn btn-primary">Sign-up</butto>
+      </div> -->
     </header>
   </div>
 </template>

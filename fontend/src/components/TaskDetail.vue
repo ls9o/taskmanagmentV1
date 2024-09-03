@@ -6,7 +6,8 @@
         <!-- ข้อมูลทั่วไป -->
         <div>
           <div class="row">
-            <p class="col-10">ชื่องาน: {{ taskDetail.infoname }}</p>
+            <p class="col-8">ชื่องาน: {{ taskDetail.infoname }}</p>
+            <p class="col-2">ความคืบหน้าจริง: {{ status }} </p>
             <p class="col-2">ความคืบหน้า: {{ progressPercentage }} %</p>
           </div>
           <p>รายละเอียด: {{ taskDetail.infodetails }}</p>
@@ -141,6 +142,7 @@ export default {
       processes: JSON.parse(localStorage.getItem('processes')) || [], // ดึงค่า processes จาก Local Storage
       dayDiff: JSON.parse(localStorage.getItem('dayDiff')) || 0,      // ดึงค่า dayDiff จาก Local Storage
       Percentage: 0,
+      date: new Date(),
       newInfoDetails: {   // ข้อมูลที่จะถูกเพิ่มใน Info ใหม่
         infodetails: '', // รายละเอียดใหม่ของ Info
         infostart: '',   // วันที่เริ่มของ Info ใหม่
@@ -151,6 +153,7 @@ export default {
   mounted() {
     this.loadTaskDetail(); // เรียกใช้ฟังก์ชันเพื่อโหลดรายละเอียดของ task เมื่อคอมโพเนนต์ถูก mount
     this.progressPercentage;
+    this.updateStatusInLocalStorage();
   },
   computed: {
     // เป็น property ที่คำนวณว่าจะคืนค่า true หรือ false
@@ -188,10 +191,62 @@ export default {
       localStorage.setItem('infoData', JSON.stringify(allData));
 
       return progressPercentage;
+    },
+    trueprogressPercentage() {
+      if (!this.taskDetail || !this.taskDetail.infostart || !this.taskDetail.infoend || !this.taskDetail.dayDiff || this.taskDetail.dayDiff <= 0) {
+        return 0;
+      }
+
+      const startDate = new Date(this.taskDetail.infostart);
+      const endDate = new Date(this.taskDetail.infoend);
+      const currentDate = this.date;
+
+      // ถ้าวันที่เริ่มต้นยังไม่ถึงหรือวันที่สิ้นสุดเกินแล้ว ให้ progress เป็น 0% หรือ 100%
+      if (currentDate < startDate) {
+        return 0;
+      } else if (currentDate > endDate) {
+        return 100;
+      }
+
+      // คำนวณจำนวนวันที่ผ่านไปแล้ว
+      const elapsedDays = Math.ceil((currentDate - startDate) / (1000 * 60 * 60 * 24));
+
+      // คำนวณ progress จากวันที่ผ่านไปเมื่อเทียบกับ dayDiff
+      const progressPercentage = Math.min((elapsedDays / this.taskDetail.dayDiff) * 100, 100).toFixed(2);
+
+      // อัปเดต progressPercentage ใน localStorage
+      let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+      let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
+
+      if (taskIndex !== -1) {
+        allData[taskIndex].trueprogressPercentage = progressPercentage;
+        localStorage.setItem('infoData', JSON.stringify(allData));
+      }
+
+      return progressPercentage;
+    },
+    status() {
+      const today = this.date;
+      const startDate = new Date(this.taskDetail.infostart);
+      const endDate = new Date(this.taskDetail.infoend);
+
+      if (today < startDate) {
+        return "in coming";
+      } else if (today > endDate) {
+        return "done";
+      } else {
+        return `${this.trueprogressPercentage}%`;
+      }
+    },
+    formattedDate() {
+      return this.date.toLocaleDateString('th-TH', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+      });
     }
   },
   methods: {
-
     loadTaskDetail() {
       const allData = JSON.parse(localStorage.getItem('infoData')) || []; // ดึงข้อมูลทั้งหมดจาก Local Storage
       const taskId = this.$route.query.infoname; // ดึงชื่อ info จาก query ใน route
@@ -308,6 +363,29 @@ export default {
     fixinfo(taskDetail) {
       this.$router.push({ name: 'AddInfo', query: { infoname: taskDetail.infoname } });
     },
+    updateStatusInLocalStorage() {
+    const today = new Date(); // วันที่ปัจจุบัน
+    const startDate = new Date(this.taskDetail.infostart);
+    const endDate = new Date(this.taskDetail.infoend);
+
+    let statusprogress;
+    if (today < startDate) {
+      statusprogress = "in coming";
+    } else if (today > endDate) {
+      statusprogress = "done";
+    } else {
+      statusprogress = `${this.trueprogressPercentage}%`;
+    }
+
+    // อัปเดต statusprogress ใน localStorage
+    let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+    let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
+
+    if (taskIndex !== -1) {
+      allData[taskIndex].statusprogress = statusprogress;
+      localStorage.setItem('infoData', JSON.stringify(allData));
+    }
+  },
   }
 };
 </script>
