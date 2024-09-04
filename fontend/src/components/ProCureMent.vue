@@ -1,11 +1,6 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="row">
-        <h1 class="col-8 mb-2">My Project</h1>
-        <input type="date" class="col-2 btn button-right">
-        <input type="date" class="col-2 btn button-right">
-      </div>
       <div class="col-12 border-bottom section-half">
         <div v-if="paginatedDataInfo.length > 0">
           <div class="card mb-3" v-for="(item, index) in paginatedDataInfo" :key="index">

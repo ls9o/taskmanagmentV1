@@ -23,7 +23,7 @@
 
         <!-- แสดงปุ่ม addinfo -->
         <div v-if="!hasAddInfoEntries && !isAddingInfo">
-          <button @click="startAddingInfo" class="btn btn-secondary mb-3">addinfo</button>
+          <button @click="startAddingInfo" class="btn btn-secondary mb-3">ยืนยันแผน</button>
         </div>
 
         <!-- แสดงฟอร์ม subInputBoxinfo เมื่อกดปุ่ม addinfo และไม่มีข้อมูลใน subInputBoxesinfo -->
@@ -59,18 +59,33 @@
             <p class="card-text">รายละเอียด: {{ info.infodetails }}</p>
             <p class="card-text">วันที่เริ่ม: {{ info.infostart }}</p>
             <p class="card-text">วันที่จบ: {{ info.infoend }}</p>
-            <div><button @click="editSub(taskDetail, info)" class="btn btn-primary">edit Info</button></div>
+            <div><button @click="editSub(taskDetail, info)" class="btn btn-primary">แก้ไข</button></div>
           </div>
         </div>
 
         <!-- ข้อมูล process ต่างๆ -->
         <div v-for="(process, processIndex) in taskDetail.processes" :key="processIndex" class="card mb-3">
           <div class="card-body">
-            <h5 class="card-title">ชื่อ Process: {{ process.procesname }}</h5>
-            <p class="card-text">รายละเอียด: {{ process.procesdetails }}</p>
-            <p class="card-text">จำนวนวันทำงาน: {{ process.processtart }} <label>วัน</label></p>
-            <p class="card-text">วันกำหนดส่ง: {{ process.procesend }}</p>
-
+            <div class="row">
+              <div class="col-6">
+                <h5 class="card-title">ชื่อ Process: {{ process.procesname }}</h5>
+                <p class="card-text">รายละเอียด: {{ process.procesdetails }}</p>
+                <p class="card-text">จำนวนวันทำงาน: {{ process.processtart }} <label>วัน</label></p>
+                <p class="card-text">วันกำหนดส่ง: {{ process.procesend }}</p>
+              </div>
+              <!-- ข้อมูลย่อยที่เพิ่มเข้ามา -->
+              <div class="col-6">
+                <div v-for="(subprocess, subprocessIndex) in process.subProcesses" :key="subprocessIndex"
+                  class="card mb-3">
+                  <div class="card-body">
+                    <p class="card-text">รายละเอียดย่อย: {{ subprocess.procesdetails }}</p>
+                    <p class="card-text">จำนวนวันทำงาน: {{ subprocess.processtart }} <label>วัน</label></p>
+                    <p class="card-text">กำหนดการส่ง: {{ subprocess.procesend }}</p>
+                    <div><button @click="editSub(taskDetail, subprocess)" class="btn btn-primary">แก้ไข</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- แสดงปุ่ม addprocess เฉพาะการ์ดนี้ -->
             <div v-if="!hasAddProcessEntries(processIndex) && !process.isAdding">
               <button @click="startAddingProcess(processIndex)"
@@ -109,16 +124,7 @@
               </div>
             </div>
 
-            <!-- ข้อมูลย่อยที่เพิ่มเข้ามา -->
-            <div v-for="(subprocess, subprocessIndex) in process.subProcesses" :key="subprocessIndex" class="card mb-3">
-              <div class="card-body">
-                <p class="card-text">รายละเอียดย่อย: {{ subprocess.procesdetails }}</p>
-                <p class="card-text">จำนวนวันทำงาน: {{ subprocess.processtart }} <label>วัน</label></p>
-                <p class="card-text">กำหนดการส่ง: {{ subprocess.procesend }}</p>
-                <div><button @click="editSub(taskDetail, subprocess)" class="btn btn-primary">edit
-                    Process</button></div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -231,9 +237,9 @@ export default {
       const endDate = new Date(this.taskDetail.infoend);
 
       if (today < startDate) {
-        return "in coming";
+        return "In Coming";
       } else if (today > endDate) {
-        return "done";
+        return "Done";
       } else {
         return `${this.trueprogressPercentage}%`;
       }
@@ -364,28 +370,28 @@ export default {
       this.$router.push({ name: 'AddInfo', query: { infoname: taskDetail.infoname } });
     },
     updateStatusInLocalStorage() {
-    const today = new Date(); // วันที่ปัจจุบัน
-    const startDate = new Date(this.taskDetail.infostart);
-    const endDate = new Date(this.taskDetail.infoend);
+      const today = new Date(); // วันที่ปัจจุบัน
+      const startDate = new Date(this.taskDetail.infostart);
+      const endDate = new Date(this.taskDetail.infoend);
 
-    let statusprogress;
-    if (today < startDate) {
-      statusprogress = "in coming";
-    } else if (today > endDate) {
-      statusprogress = "done";
-    } else {
-      statusprogress = `${this.trueprogressPercentage}%`;
-    }
+      let statusprogress;
+      if (today < startDate) {
+        statusprogress = "in coming";
+      } else if (today > endDate) {
+        statusprogress = "done";
+      } else {
+        statusprogress = `${this.trueprogressPercentage}%`;
+      }
 
-    // อัปเดต statusprogress ใน localStorage
-    let allData = JSON.parse(localStorage.getItem('infoData')) || [];
-    let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
+      // อัปเดต statusprogress ใน localStorage
+      let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+      let taskIndex = allData.findIndex(item => item.infoname === this.taskDetail.infoname);
 
-    if (taskIndex !== -1) {
-      allData[taskIndex].statusprogress = statusprogress;
-      localStorage.setItem('infoData', JSON.stringify(allData));
-    }
-  },
+      if (taskIndex !== -1) {
+        allData[taskIndex].statusprogress = statusprogress;
+        localStorage.setItem('infoData', JSON.stringify(allData));
+      }
+    },
   }
 };
 </script>

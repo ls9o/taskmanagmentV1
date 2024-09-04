@@ -75,7 +75,7 @@
           </div>
         </div>
         <div class="mb-3">
-          <button type="button" class="btn btn-secondary" @click="addProcess">add process</button>
+          <button type="button" class="btn btn-secondary" @click="addProcess">เพิ่ม process</button>
         </div>
         <div class="mb-3  text-end">
           <button type="submit" class="btn btn-success mb-3 button-right">ยืนยัน</button>
@@ -122,7 +122,7 @@ data() {
 
       // หาตำแหน่งของ task ที่ต้องการอัปเดต
       let taskIndex = allData.findIndex(item => item.infoname === this.Datainfo.infoname);
-
+      
       // ถ้าพบข้อมูลที่ต้องการอัปเดต
       if (taskIndex !== -1) {
         // อัปเดตค่า validDayDiff
@@ -152,29 +152,38 @@ data() {
     },
     // confirminfo เมื่อกดปุ่มยืนยันจะบันทึกข้อมูลทั้งหมดที่กรอกพร้อมกับprocessย่อย
     confirminfo() {
-  this.Datainfo.processes = this.subInputBoxes; //นำค่า SubInputBoxes มาเมื่อแก้ไขข้อมูลจาก component มาแทนค่า Processes
+      this.Datainfo.processes = this.subInputBoxes; //นำค่า SubInputBoxes มาเมื่อแก้ไขข้อมูลจาก component มาแทนค่า Processes
 
-  // อัปเดตค่า dayDiff ใน Datainfo
-  this.Datainfo.dayDiff = this.daysBetween; 
+      // คำนวณผลรวมของ subInputBox.processtart
+      const totalProcessDays = this.subInputBoxes.reduce((sum, subInputBox) => sum + parseFloat(subInputBox.processtart || 0), 0);
 
-  let allData = JSON.parse(localStorage.getItem('infoData')) || []; 
-  const newEntry = { ...this.Datainfo }; // Clone Datainfo to avoid reference issues
+      // ตรวจสอบว่าผลรวมของ process days ตรงกับ daysBetween หรือไม่
+      if (totalProcessDays !== this.daysBetween) {
+        alert('จำนวนวันทั้งหมดของ Process ไม่ตรงกับจำนวนวันของแผนงาน');
+        return; // หยุดการดำเนินการถ้าไม่ตรงกัน
+      }
 
-  // Check if there is already an entry with the same `infoname`
-  const existingIndex = allData.findIndex(entry => entry.infoname === newEntry.infoname);
+      // อัปเดตค่า dayDiff ใน Datainfo
+      this.Datainfo.dayDiff = this.daysBetween;
 
-  if (existingIndex > -1) {
-    // If found, update the existing entry
-    allData[existingIndex] = newEntry;
-  } else {
-    // If not found, add a new entry
-    allData.push(newEntry);
-  }
+      let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+      const newEntry = { ...this.Datainfo }; // Clone Datainfo to avoid reference issues
 
-  localStorage.setItem('infoData', JSON.stringify(allData));  // นำข้อมูลที่ update แล้วกลับไปเก็บใน localStorage ภายใต้ Key infoData
-  alert('บันทึกข้อมูลสำเร็จ');
-  this.$router.push({ name: 'TaskDetail', query: { infoname: this.Datainfo.infoname } });
-},
+      // Check if there is already an entry with the same `infoname`
+      const existingIndex = allData.findIndex(entry => entry.infoname === newEntry.infoname);
+
+      if (existingIndex > -1) {
+        // If found, update the existing entry
+        allData[existingIndex] = newEntry;
+      } else {
+        // If not found, add a new entry
+        allData.push(newEntry);
+      }
+
+      localStorage.setItem('infoData', JSON.stringify(allData));  // นำข้อมูลที่ update แล้วกลับไปเก็บใน localStorage ภายใต้ Key infoData
+      alert('บันทึกข้อมูลสำเร็จ');
+      this.$router.push({ name: 'TaskDetail', query: { infoname: this.Datainfo.infoname } });
+    },
 
     // เมื่อกดปุ่ม addprocess เพิ่มข้อมูลสำหรับกรอก proces ย่อย
     addProcess() {
