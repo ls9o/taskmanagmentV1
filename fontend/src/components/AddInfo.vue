@@ -1,15 +1,17 @@
 <template>
   <div class="container-xl">
     <h1 class="text-center mb-4">Create Tasks</h1>
-    <form @submit.prevent="confirminfo" class="row">
-      <div class="col-12">
-        <div class="mb-3">
+    <form @submit.prevent="confirminfo">
+      <div>
+        <div>
           <label class="form-label">ชื่องาน:</label>
-          <input class="form-control bg-secondary-custom shadow-sm p-3 mb-5 bg-body-tertiary rounded" type="text" v-model="Datainfo.infoname">
+          <input class="form-control bg-secondary-custom shadow-sm p-3 mb-5 bg-body-tertiary rounded" type="text"
+            v-model="Datainfo.infoname">
         </div>
-        <div class="mb-3">
+        <div>
           <label class="form-label">รายละเอียด:</label>
-          <textarea class="form-control bg-secondary-custom shadow-sm p-3 mb-5 bg-body-tertiary rounded" rows="1" v-model="Datainfo.infodetails"></textarea>
+          <textarea class="form-control bg-secondary-custom shadow-sm p-3 mb-5 bg-body-tertiary rounded" rows="1"
+            v-model="Datainfo.infodetails"></textarea>
         </div>
         <div class="row">
           <div class="col-md-2 mb-3">
@@ -23,9 +25,9 @@
           </div>
         </div>
         <div class="col-2 mb-3">
-            <label class="form-label">จำนวนวัน:</label>
-            <input class="form-control bg-secondary-custom" type="text" :value="daysBetween" readonly>
-          </div>
+          <label class="form-label">จำนวนวัน:</label>
+          <input class="form-control bg-secondary-custom" type="text" :value="daysBetween" readonly>
+        </div>
         <div class="row">
           <div class="col-md-8 mb-3">
             <label class="form-label">ประเภทงาน:</label><br>
@@ -34,7 +36,8 @@
               <label class="form-check-label athiti-medium" for="internal ">ภายใน</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" id="procurement" value="จัดซื้อจัดจ้าง" v-model="Datainfo.infotype">
+              <input class="form-check-input" type="radio" id="procurement" value="จัดซื้อจัดจ้าง"
+                v-model="Datainfo.infotype">
               <label class="form-check-label athiti-medium" for="procurement">จัดซื้อจัดจ้าง</label>
             </div>
           </div>
@@ -59,18 +62,19 @@
             </div>
             <div class="mb-3">
               <label class="form-label">รายละเอียด:</label>
-              <textarea class="form-control bg-secondary-custom" rows="1" v-model="subInputBox.procesdetails"></textarea>
+              <textarea class="form-control bg-secondary-custom" rows="1"
+                v-model="subInputBox.procesdetails"></textarea>
             </div>
             <div class="row">
-            <div class="col-2 mb-3">
-              <label class="form-label">จำนวนวันทำงาน:</label>
-              <input class="form-control bg-secondary-custom" type="number" v-model="subInputBox.processtart">
+              <div class="col-2 mb-3">
+                <label class="form-label">จำนวนวันทำงาน:</label>
+                <input class="form-control bg-secondary-custom" type="number" v-model="subInputBox.processtart">
+              </div>
+              <div class="col-2 mb-3">
+                <label class="form-label">กำหนดการส่ง:</label>
+                <input class="form-control bg-secondary-custom" type="date" v-model="subInputBox.procesend">
+              </div>
             </div>
-            <div class="col-2 mb-3">
-              <label class="form-label">กำหนดการส่ง:</label>
-              <input class="form-control bg-secondary-custom" type="date" v-model="subInputBox.procesend">
-            </div>
-          </div>
             <button class="btn btn-danger me-2" type="button" @click="delProcess(index)">ลบ</button>
           </div>
         </div>
@@ -87,7 +91,7 @@
 
 <script>
 export default {
-data() {
+  data() {
     return {
       Datainfo: {
         infoname: '',
@@ -98,7 +102,7 @@ data() {
         manager: '',
         team: '',
         processes: [],
-        
+
       },
       subInputBoxes: [],
       managers: ['Manager1', 'Manager2', 'Manager3'],
@@ -109,35 +113,36 @@ data() {
     this.loadTaskData();
   },
   computed: {
-  daysBetween() {
-    const startDate = new Date(this.Datainfo.infostart);
-    const endDate = new Date(this.Datainfo.infoend);
+    // เช็ควันว่ามีจำนวนห่างกันกี่วัน
+    daysBetween() {
+      const startDate = new Date(this.Datainfo.infostart);
+      const endDate = new Date(this.Datainfo.infoend);
 
-    if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
-      const timeDiff = endDate - startDate;
-      const validDayDiff = timeDiff / (1000 * 60 * 60 * 24);
+      if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
+        const timeDiff = endDate - startDate;
+        const validDayDiff = timeDiff / (1000 * 60 * 60 * 24);
 
-      // โหลดข้อมูลจาก Local Storage
-      let allData = JSON.parse(localStorage.getItem('infoData')) || [];
+        // โหลดข้อมูลจาก Local Storage
+        let allData = JSON.parse(localStorage.getItem('infoData')) || [];
 
-      // หาตำแหน่งของ task ที่ต้องการอัปเดต
-      let taskIndex = allData.findIndex(item => item.infoname === this.Datainfo.infoname);
-      
-      // ถ้าพบข้อมูลที่ต้องการอัปเดต
-      if (taskIndex !== -1) {
-        // อัปเดตค่า validDayDiff
-        allData[taskIndex].dayDiff = validDayDiff >= 0 ? validDayDiff : 0;
+        // หาตำแหน่งของ task ที่ต้องการอัปเดต
+        let taskIndex = allData.findIndex(item => item.infoname === this.Datainfo.infoname);
+
+        // ถ้าพบข้อมูลที่ต้องการอัปเดต
+        if (taskIndex !== -1) {
+          // อัปเดตค่า validDayDiff
+          allData[taskIndex].dayDiff = validDayDiff >= 0 ? validDayDiff : 0;
+        }
+
+        // เก็บข้อมูลกลับลงใน Local Storage
+        localStorage.setItem('infoData', JSON.stringify(allData));
+
+        return validDayDiff >= 0 ? validDayDiff : 0;
       }
 
-      // เก็บข้อมูลกลับลงใน Local Storage
-      localStorage.setItem('infoData', JSON.stringify(allData));
-
-      return validDayDiff >= 0 ? validDayDiff : 0;
+      return 0; // หากข้อมูลยังไม่ครบ ให้คืนค่า 0
     }
-
-    return 0; // หากข้อมูลยังไม่ครบ ให้คืนค่า 0
-  }
-},
+  },
   methods: {
     // loadTaskData ไว้ดึงข้อมูลจาก card ที่เราต้องการแก้ไข
     loadTaskData() {
@@ -153,6 +158,21 @@ data() {
     // confirminfo เมื่อกดปุ่มยืนยันจะบันทึกข้อมูลทั้งหมดที่กรอกพร้อมกับprocessย่อย
     confirminfo() {
       this.Datainfo.processes = this.subInputBoxes; //นำค่า SubInputBoxes มาเมื่อแก้ไขข้อมูลจาก component มาแทนค่า Processes
+
+      // ตรวจสอบว่าฟิลด์ที่จำเป็นทั้งหมดถูกกรอกแล้วหรือไม่
+      if (!this.Datainfo.infoname || !this.Datainfo.infodetails || !this.Datainfo.infostart || !this.Datainfo.infoend || !this.Datainfo.infotype || !this.Datainfo.manager || !this.Datainfo.team) {
+        alert('กรุณากรอกข้อมูลในทุกช่องที่จำเป็น');
+        return; // หยุดการดำเนินการถ้ามีฟิลด์ที่ไม่ได้กรอก
+      }
+
+      // ตรวจสอบว่าได้กรอกข้อมูลในทุก process หรือไม่
+      for (let i = 0; i < this.subInputBoxes.length; i++) {
+        const subInputBox = this.subInputBoxes[i];
+        if (!subInputBox.procesname || !subInputBox.procesdetails || !subInputBox.processtart || !subInputBox.procesend) {
+          alert('กรุณากรอกข้อมูลในทุก Process');
+          return; // หยุดการดำเนินการถ้ามี process ที่ไม่ได้กรอก
+        }
+      }
 
       // คำนวณผลรวมของ subInputBox.processtart
       const totalProcessDays = this.subInputBoxes.reduce((sum, subInputBox) => sum + parseFloat(subInputBox.processtart || 0), 0);
@@ -184,7 +204,6 @@ data() {
       alert('บันทึกข้อมูลสำเร็จ');
       this.$router.push({ name: 'TaskDetail', query: { infoname: this.Datainfo.infoname } });
     },
-
     // เมื่อกดปุ่ม addprocess เพิ่มข้อมูลสำหรับกรอก proces ย่อย
     addProcess() {
       this.subInputBoxes.push({

@@ -81,7 +81,7 @@
                     <p class="card-text">รายละเอียดย่อย: {{ subprocess.procesdetails }}</p>
                     <p class="card-text">จำนวนวันทำงาน: {{ subprocess.processtart }} <label>วัน</label></p>
                     <p class="card-text">กำหนดการส่ง: {{ subprocess.procesend }}</p>
-                    <div><button @click="editSub(taskDetail, subprocess)" class="btn btn-primary">แก้ไข</button></div>
+                    <div><button @click="editSub(taskDetail, subprocess)" class="btn btn-primary button-right">แก้ไข</button></div>
                   </div>
                 </div>
               </div>
@@ -89,7 +89,7 @@
             <!-- แสดงปุ่ม addprocess เฉพาะการ์ดนี้ -->
             <div v-if="!hasAddProcessEntries(processIndex) && !process.isAdding">
               <button @click="startAddingProcess(processIndex)"
-                class="btn btn-secondary mb-4 button-right">addprocess</button>
+                class="btn btn-secondary mb-4 button-right">ยืนยันขั้นตอน</button>
             </div>
 
             <!-- แสดงฟอร์ม subInputBoxprocess เมื่อกดปุ่ม addprocess -->
@@ -120,11 +120,8 @@
                   <button class="btn btn-danger mb-2 " type="button"
                     @click="cancelAddingProcess(processIndex)">ยกเลิก</button>
                 </div>
-
               </div>
             </div>
-
-
           </div>
         </div>
       </div>
@@ -135,6 +132,7 @@
           <button class="btn btn-primary button-right mb-3 " @click="fixinfo(taskDetail)">แก้ไข</button>
         </div>
       </div>
+
     </form>
   </div>
 </template>
@@ -376,9 +374,9 @@ export default {
 
       let statusprogress;
       if (today < startDate) {
-        statusprogress = "in coming";
+        statusprogress = "In Coming";
       } else if (today > endDate) {
-        statusprogress = "done";
+        statusprogress = "Done";
       } else {
         statusprogress = `${this.trueprogressPercentage}%`;
       }

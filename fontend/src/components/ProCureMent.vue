@@ -1,16 +1,19 @@
 <template>
   <div class="container-fluid">
+    <h1>My Project</h1>
     <div class="row">
       <div class="col-12 border-bottom section-half">
         <div v-if="paginatedDataInfo.length > 0">
           <div class="card mb-3" v-for="(item, index) in paginatedDataInfo" :key="index">
             <div class="card-body d-flex justify-content-between">
-              <span class="col-4">Name: {{ truncate(item.infoname, 20) }}</span>
-              <span>{{ item.statusprogress }} </span>
-              <span>{{ item.progressPercentage }} %</span>
-              <div><i class="fa-solid fa-calendar-days icon-pad"></i>
-                <span class="col">Start: {{ item.infostart ? item.infostart : 'No Start Date' }}</span>
-                <span class="col">/End: {{ item.infoend ? item.infoend : 'No End Date' }}</span>
+              <span class="col-4">Name: {{ truncate(item.infoname, 30) }}</span>
+              <span>ความคืบหน้าจริง : {{ item.statusprogress }} </span>
+              <span>ความคืบหน้า : {{ item.progressPercentage }} %</span>
+              <div>
+                <i class="fa-solid fa-calendar-days icon-pad"></i>
+                <span class="me-3">Start: {{ item.infostart ? item.infostart : 'No Start Date' }}</span>
+                <i class="fa-solid fa-calendar-days icon-pad"></i>
+                <span>End: {{ item.infoend ? item.infoend : 'No End Date' }}</span>
               </div>
               <button @click="moreinfo(item)" type="button" class="btn btn-outline-primary">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -33,12 +36,12 @@
       </div>
 
       <div class="col-12 section-half">
-      <h1>In Team</h1>
+        <h1>In Team</h1>
         <div v-if="paginatedDataInTeam.length > 0">
           <div class="card mb-3" v-for="(item, index) in paginatedDataInTeam" :key="index">
             <div class="card-body d-flex justify-content-between">
               <span class="col-4">Name: {{ truncate(item.infoname, 20) }}</span>
-              <span class="col-4">Detail: {{ truncate(item.infodetails, 50) }}</span>
+              <!-- <span class="col-4">Detail: {{ truncate(item.infodetails, 50) }}</span> -->
               <span class="col">DayStart: {{ item.infostart ? item.infostart : 'No Start Date' }}</span>
               <span class="col">DayEnd: {{ item.infoend ? item.infoend : 'No End Date' }}</span>
               <button @click="moreinfo(item)" type="button" class="btn btn-outline-primary">
@@ -62,7 +65,7 @@
   </div>
 </template>
 
- 
+
 <script>
 export default {
   data() {
